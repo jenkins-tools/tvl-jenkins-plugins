@@ -15,8 +15,10 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -40,6 +42,12 @@ public class BuildBranchParameter extends SimpleParameterDefinition {
         this.branchName = "";
     }
 
+    public String convertToApiUrl(String buildRepoUrl){
+        String apiUrl = "";
+        String[] urlSplitted = buildRepoUrl.split("/");
+        apiUrl = urlSplitted[0] + "//" + urlSplitted[2] + "/a/projects/" + URLEncoder.encode(urlSplitted[6] + "/" +urlSplitted[7]) + "/branches/";
+        return apiUrl;
+    }
     /**
      * Generate a list of branches used for 'build_codename'
      * This method run <code>buildRepoUrl</code> API and get branche names.
@@ -57,6 +65,7 @@ public class BuildBranchParameter extends SimpleParameterDefinition {
         String username = getDescriptor().getUsername();
         String password = getDescriptor().getPassword();
         String buildRepoUrl = getDescriptor().getBuildRepoUrl();
+        String apiUrl = "";
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         httpClient.getCredentialsProvider().setCredentials(
@@ -65,8 +74,9 @@ public class BuildBranchParameter extends SimpleParameterDefinition {
         );
         List<String> choices = new ArrayList<>();
         if (!buildRepoUrl.equals("") && !username.equals("") && !password.equals("")) {
-            LOGGER.info("Get a list of branches from " + buildRepoUrl);
-            HttpGet get_req = new HttpGet(buildRepoUrl);
+            apiUrl = convertToApiUrl(buildRepoUrl);
+            LOGGER.info("Get a list of branches from " + apiUrl);
+            HttpGet get_req = new HttpGet(apiUrl);
             HttpResponse response;
             response = httpClient.execute(get_req);
             HttpEntity entity = response.getEntity();
@@ -91,18 +101,16 @@ public class BuildBranchParameter extends SimpleParameterDefinition {
                         .filter(i -> !i.equals("HEAD") && !i.equals("config"))
                         .filter(j -> j.charAt(0) == '@')
                         .filter(k -> k.split("\\.").length == 1)
-                        .forEach(l -> choices.add(l));
-                choices.add("sunjoo");
-                choices.add("soyul");
+                        .forEach(l -> choices.add(l.replace("@", "").replace("337", "")));
             }
             else{
-                LOGGER.warning("Can't get a list of branches from " + buildRepoUrl);
+                LOGGER.warning("Can't get a list of branches from " + apiUrl);
                 LOGGER.warning(Integer.toString(response.getStatusLine().getStatusCode()));
                 LOGGER.warning(response.getStatusLine().getReasonPhrase());
             }
         }else{
             LOGGER.info("Don't get a list of branches from a build repository");
-            LOGGER.info(buildRepoUrl);
+            LOGGER.info(apiUrl);
             LOGGER.info(username);
             if (password.equals("")){
                 LOGGER.info("Password is not defined");
@@ -113,7 +121,12 @@ public class BuildBranchParameter extends SimpleParameterDefinition {
         for (String i : temp) {
             choices.add(i);
         }
-        return choices;
+        Collections.sort(choices);
+        return choices.stream().distinct()
+                .sorted(Collections.reverseOrder())
+                .filter(s -> !s.equals("seetv"))
+                .filter(s -> !s.equals("drd-test"))
+                .collect(toList());
     }
 
     public String getBranchName() {

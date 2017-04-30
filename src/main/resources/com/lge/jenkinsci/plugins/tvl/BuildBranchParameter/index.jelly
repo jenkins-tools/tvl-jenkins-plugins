@@ -6,7 +6,7 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
-        <f:entry title="${h.capitalize(it.name)}" description="${it.formattedDescription}">
+        <f:entry title="${it.name}" description="${it.formattedDescription}">
             <div name="parameter">
             <input type="hidden" name="name" value="${it.name}"/>
             <select name="value" style="width: 150px">
