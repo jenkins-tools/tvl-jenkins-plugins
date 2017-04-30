@@ -17,5 +17,14 @@
       description="List of branches">
       <f:textarea />
     </f:entry>
+    <f:entry title="Build Repository url" field="buildRepoUrl" description="Build Repository Url">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="Username" field="username" description="username">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="Password" field="password" description="password">
+      <f:password />
+    </f:entry>
   </f:section>
 </j:jelly>
