@@ -39,7 +39,7 @@ THE SOFTWARE.
             <td>${parameter.descriptor.displayName}</td>
             <td><tt><strong>${parameter.name}</strong></tt></td>
             <td>
-                <j:if test="${it.getDefault(parameter) != null}">
+           1     <j:if test="${it.getDefault(parameter) != null}">
                     <st:nbsp/>=<st:nbsp/>${it.getDefault(parameter)}
                 </j:if>
             </td>
@@ -48,16 +48,47 @@ THE SOFTWARE.
         </j:forEach>
     </table>
     -->
-    <table class="aui">
+    <button class="aui-button aui-button-primary">Button</button>
+
+    <table class="aui aui-table-sortable" style="width: 60%;">
+    <!--<table>-->
         <thead>
             <tr>
-                <th id="name">Name</th>
-                <th id="type">Type</th>
-                <th id="order">Order</th>
-                <th id="action">Action</th>
+                <!--<th id="name">Name</th>-->
+                <th id="number">Number</th>
+                <th id="result">Result</th>
+                <th id="description">Description</th>
             </tr>
         </thead>
         <tbody>
+            <j:forEach var="run" items="${it.data}">
+               <tr>
+
+                   <!--<td style="width: 300px;">${run.name}</td>-->
+                   <!--<td class="build-row-cell">${run.number}</td>-->
+                   <td style="width: 100px;">${run.number}</td>
+                   <j:if test="${run.result == 'SUCCESS'}">
+                   <td style="width: 50px;">
+                       <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
+                   </td>
+                   </j:if>
+                   <j:if test="${run.result != 'SUCCESS'}">
+                       <td class="build-row-cell ">
+                           <span class="aui-lozenge aui-lozenge-error">${run.result}</span>
+                       </td>
+                   </j:if>
+                   <td >
+                      ${run.start}
+                   </td>
+               </tr>
+                <!--<tr>
+                   <td >${run.name}</td>
+                   <td >${run.number}</td>
+                   <td >${run.result}</td>
+                   <td >test</td>
+               </tr>-->
+            </j:forEach>
+            <!--
             <tr>
                 <td headers="name">Default</td>
                 <td headers="type">Internal Directory</td>
@@ -100,6 +131,7 @@ THE SOFTWARE.
                     </ul>
                 </td>
             </tr>
+            -->
         </tbody>
     </table>
 </j:jelly>

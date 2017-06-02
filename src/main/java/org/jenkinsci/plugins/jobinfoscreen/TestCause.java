@@ -1,6 +1,5 @@
-package org.jenkinsci.plugins.jobparametersummary;
+package org.jenkinsci.plugins.jobinfoscreen;
 
-import hudson.Extension;
 import hudson.model.Cause;
 
 /**

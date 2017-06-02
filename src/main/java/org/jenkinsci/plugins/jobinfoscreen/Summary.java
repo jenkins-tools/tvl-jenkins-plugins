@@ -1,15 +1,11 @@
-package org.jenkinsci.plugins.jobparametersummary;
+package org.jenkinsci.plugins.jobinfoscreen;
 
-import hudson.Extension;
 import hudson.model.*;
+import hudson.util.RunList;
 import hudson.util.Secret;
-import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Summary extends InvisibleAction {
 
@@ -31,6 +27,34 @@ public class Summary extends InvisibleAction {
     public String toString() {
 
         return "Job parameter summary for " + project.toString();
+    }
+
+    public List<Map<String, String>> getData(){
+        String name = project.getName();
+        RunList r = project.getBuilds();
+        Iterator i = r.iterator();
+        List<Map<String, String>> list = new ArrayList<>();
+        String dateFormat = "yyyy-MM-dd hh:mm a";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+        while(i.hasNext()){
+            Run each_run = (Run) i.next();
+            Map<String,String> each_r = new HashMap<String, String>();
+            String result = each_run.getResult().toString();
+            each_r.put("name", name);
+            each_r.put("result", result);
+            int number = each_run.getNumber();
+            each_r.put("number", String.valueOf(number));
+            String description = each_run.getDescription();
+            each_r.put("description", description);
+            long startTime = each_run.getStartTimeInMillis();
+            Date startDate = new Date(startTime);
+            each_r.put("start", simpleDateFormat.format(startDate.getTime()));
+            long duration = each_run.getDuration();
+            each_r.put("duraiton", String.valueOf(duration));
+            long estimataedDuration = each_run.getEstimatedDuration();
+            list.add(each_r);
+        }
+        return list;
     }
 
     private static ParametersDefinitionProperty definitionProperty(

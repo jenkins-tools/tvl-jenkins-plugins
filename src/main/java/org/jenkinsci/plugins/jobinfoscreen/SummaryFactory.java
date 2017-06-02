@@ -1,13 +1,15 @@
-package org.jenkinsci.plugins.jobparametersummary;
+package org.jenkinsci.plugins.jobinfoscreen;
 
 import hudson.Extension;
 import hudson.model.*;
+import hudson.model.listeners.RunListener;
+import hudson.util.RunList;
 import net.sf.json.JSONObject;
-import org.jenkinsci.plugins.jobparametersummary.Summary;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 
 @Extension
 public class SummaryFactory extends TransientProjectActionFactory implements Describable<SummaryFactory> {
@@ -35,10 +37,19 @@ public class SummaryFactory extends TransientProjectActionFactory implements Des
             }
             */
         String name = target.getName();
-        if (name.equals("test2")){
+        /*
+        RunList<Run> r = target.getBuilds();
+        Iterator i = r.iterator();
+        while(i.hasNext()){
+            Run each_run = (Run) i.next();
+            System.out.println(name + ": " + each_run.getResult().toString());
+        }
+        */
+        if (name.equals("starfish-gld4tv-official-m16p")){
             return Collections.singletonList(new Summary(target));
         }else{
-            return Collections.emptyList();
+            return Collections.singletonList(new Summary(target));
+//            return Collections.emptyList();
         }
     }
 
