@@ -13,7 +13,7 @@
                 var owner_name = $(this).find("td.owner").first().text();
                 console.log("Owner: " + owner_name);
                 console.log("Logged: " + username);
-                if ( owner_name === username) {
+                if (username === "all" || owner_name === username) {
                     $(this).show();
                 }else{
                     $(this).hide();
@@ -21,9 +21,15 @@
             });
         }
     </script>
+    <style type="text/css">
+        td.build_number, td.gerrit_project {
+            font-weight: bold;
+        }
+    </style>
     <h2>Build List</h2>
     <button class="aui-button aui-button-primary" onclick="show_my_change('${it.loggedUser}')">Show my changes</button>
-    <table class="aui aui-table-sortable" style="width: 60%;">
+    <button class="aui-button " onclick="show_my_change('all')">Show all</button>
+    <table class="aui aui-table-sortable" style="width: 100%;">
         <!--<table>-->
         <thead>
             <tr>
@@ -39,10 +45,14 @@
         <tbody>
             <j:forEach var="run" items="${it.data}">
                 <tr class="change">
-                    <td style="width: 100px;">${run.number}</td>
+                    <td style="width: 100px;" class="build_number">
+                        <a href="${run.url}" target="_blank">#${run.number}</a>
+                    </td>
                     <j:if test="${run.result == 'SUCCESS'}">
                         <td style="width: 50px;">
+                            <a href="${run.download_url}" target="_blank">
                             <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
+                            </a>
                         </td>
                     </j:if>
                     <j:if test="${run.result != 'SUCCESS'}">
@@ -53,7 +63,7 @@
                     <td >
                         ${run.when}
                     </td>
-                    <td >
+                    <td class="gerrit_project">
                         ${run.gerrit_project}
                     </td>
                     <td >
