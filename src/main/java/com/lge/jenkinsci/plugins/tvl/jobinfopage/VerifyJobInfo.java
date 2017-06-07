@@ -1,10 +1,9 @@
 package com.lge.jenkinsci.plugins.tvl.jobinfopage;
 
-import hudson.model.AbstractProject;
-import hudson.model.InvisibleAction;
-import hudson.model.Run;
+import hudson.model.*;
 import hudson.util.RunList;
 
+import java.lang.reflect.Parameter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -24,6 +23,18 @@ public class VerifyJobInfo extends InvisibleAction {
         return "Job information page for " + project.toString();
     }
 
+    public String getLoggedUser(){
+        String logged_user_name = "";
+        try {
+            User logged_user = User.current();
+            logged_user_name = logged_user.getId();
+        }catch(Exception e)
+        {
+            logged_user_name = "None";
+        }
+        return logged_user_name;
+    }
+
     public List<Map<String, String>> getData(){
         String name = project.getName();
         RunList r = project.getBuilds();
@@ -33,6 +44,8 @@ public class VerifyJobInfo extends InvisibleAction {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         while(i.hasNext()){
             Run each_run = (Run) i.next();
+            List<Action> actions = (List<Action>) each_run.getAllActions();
+            ParametersAction parameterAction = (ParametersAction) actions.get(0);
             Map<String,String> each_r = new HashMap<String, String>();
             String result = each_run.getResult().toString();
             each_r.put("name", name);
@@ -43,10 +56,16 @@ public class VerifyJobInfo extends InvisibleAction {
             each_r.put("description", description);
             long startTime = each_run.getStartTimeInMillis();
             Date startDate = new Date(startTime);
-            each_r.put("start", simpleDateFormat.format(startDate.getTime()));
+            each_r.put("when", simpleDateFormat.format(startDate.getTime()));
             long duration = each_run.getDuration();
-            each_r.put("duraiton", String.valueOf(duration));
+            each_r.put("duration", String.valueOf(duration));
             long estimataedDuration = each_run.getEstimatedDuration();
+
+            each_r.put("gerrit_project", parameterAction.getParameter("GERRIT_PROJECT").getValue().toString());
+            each_r.put("gerrit_change_url", parameterAction.getParameter("GERRIT_CHANGE_URL").getValue().toString());
+            each_r.put("gerrit_change_owner_name", parameterAction.getParameter("GERRIT_CHANGE_OWNER_NAME").getValue().toString());
+            each_r.put("gerrit_change_number", parameterAction.getParameter("GERRIT_CHANGE_NUMBER").getValue().toString());
+            each_r.put("gerrit_patchset_number", parameterAction.getParameter("GERRIT_PATCHSET_NUMBER").getValue().toString());
             list.add(each_r);
         }
         return list;
