@@ -7,6 +7,7 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by sunjoo on 07/06/2017.
@@ -30,6 +31,7 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
         private String svlArchiveVerifyPath;
         private String tvlJenkinsUrl;
         private String svlJenkinsUrl;
+        private String wallGitwebUrl;
 
         public DescriptorForJobInfoFactory(){
             load();
@@ -45,6 +47,7 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
             svlArchiveVerifyPath= formData.getString("svlArchiveVerifyPath");
             tvlJenkinsUrl = formData.getString("tvlJenkinsUrl");
             svlJenkinsUrl = formData.getString("svlJenkinsUrl");
+            wallGitwebUrl = formData.getString("wallGitwebUrl");
             save();
             return super.configure(req, formData);
         }
@@ -68,6 +71,10 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
             return svlJenkinsUrl;
         }
 
+        public String getWallGitwebUrl(){
+            return wallGitwebUrl;
+        }
+
         @Override
         public String getDisplayName() {
             return "Job Information Display";
@@ -80,8 +87,26 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
         String[] jobNameSplitted = jobName.split("-");
         if (jobNameSplitted[2].equals("verify")){
             return Collections.singletonList(new VerifyJobInfo(target));
+        }else if(jobNameSplitted[2].equals("official")){
+            return Collections.singletonList(new OfficialJobInfo(target));
         }else {
             return Collections.emptyList();
         }
+    }
+
+    public static String convertDuration(long duration){
+        String durationStr = "";
+        long hours = TimeUnit.MILLISECONDS.toHours(duration);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(duration);
+        if (hours == 0){
+            durationStr = String.format("%d min, %d sec", minutes, seconds - TimeUnit.MINUTES.toSeconds(minutes));
+        }else {
+            durationStr = String.format("%d hour, %d min, %d sec",
+                    hours,
+                    minutes - TimeUnit.HOURS.toMinutes(hours),
+                    seconds - TimeUnit.MINUTES.toSeconds(minutes));
+        }
+        return durationStr;
     }
 }

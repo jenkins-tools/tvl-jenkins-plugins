@@ -1,5 +1,5 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form" xmlns:g2="null">
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui.min.css" media="all"/>
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui-experimental.min.css" media="all"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
@@ -8,36 +8,47 @@
     <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-datepicker.min.js"></script>
     <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-soy.min.js"></script>
     <script type="text/javascript">
-        function show_my_change(username) {
-            $('tr.change').each(function () {
-                var owner_name = $(this).find("td.owner").first().text();
-                console.log("Owner: " + owner_name);
-                console.log("Logged: " + username);
-                if (username === "all" || owner_name === username) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
+        function show_comment(url) {
+            window.open(url);
         }
     </script>
     <style type="text/css">
         td.build_number, td.gerrit_project {
         font-weight: bold;
         }
+        .gitweb-link{
+        background: #ccc;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        color: #333;
+        display: inline-block;
+        <!--font-size: 11px;-->
+        font-weight: bold;
+        line-height: 99%;
+        /* cross-browser compromise to make the line-height match the font-size */
+        margin: 0;
+        padding: 2px 5px;
+        text-align: center;
+        text-decoration: none;
+        <!--text-transform: uppercase;-->
+
+        background-color: #90EE90;
+        border-color: #90EE90;
+        color: #000000;
+        }
     </style>
     <h2>Build List</h2>
-    <button class="aui-button aui-button-primary" onclick="show_my_change('${it.loggedUser}')">Show my changes</button>
-    <button class="aui-button " onclick="show_my_change('all')">Show all</button>
     <table class="aui aui-table-sortable" style="width: 100%;">
         <thead>
             <tr>
                 <th id="number">Number</th>
                 <th id="result">Result</th>
                 <th id="when">When</th>
-                <th id="repository">Repository</th>
-                <th id="gerrit_review">Gerrit Review</th>
-                <th id="owner">Owner</th>
+                <th id="version">Version</th>
+                <th id="buildrepodescription">Build Repository Description</th>
+                <th id="gitwhen">When Merged</th>
+                <th id="gitcomment">Comment</th>
+                <th id="gitcommitid">Commit id</th>
                 <th id="duration">Duration</th>
             </tr>
         </thead>
@@ -62,20 +73,39 @@
                     <td>
                         ${run.when}
                     </td>
-                    <td class="gerrit_project">
-                        ${run.gerrit_project}
+                    <td>
+                        <pre>
+                            ${run.version}
+                        </pre>
                     </td>
                     <td>
-                        <j:if test="${run.gerrit_change_number != '' and run.gerrit_change_number != null}">
-                            <a href="${run.gerrit_change_url}" target="_blank">${run.gerrit_change_number},
-                                ${run.gerrit_patchset_number}
+                        <j:if test="${run.buildrepo.trim() != '' and run.buildrepo != null}">
+                            <a target="_blank" href="${run.gittaglink}">
+                                <span class="aui-lozenge aui-lozenge-current">
+                                    ${run.buildrepo}
+                                </span>
                             </a>
                         </j:if>
                     </td>
-                    <td class="owner">
-                        ${run.gerrit_change_owner_name}
+                    <td>
+                        <pre>
+                            ${run.gitwhen}
+                        </pre>
                     </td>
-                    <td class="duration">
+                    <td>
+                        <button class="aui-button" onclick="show_comment('${run.gitcommenturl}')">Show Commit Message
+                        </button>
+                    </td>
+                    <td>
+                        <j:if test="${run.gitcommitid != '' and run.gitcommitid != null}">
+                            <a target="_blank" href="${run.gitcommitlink}">
+                                <span class="gitweb-link">
+                                    ${run.gitcommitid.substring(0,7)}
+                                </span>
+                            </a>
+                        </j:if>
+                    </td>
+                    <td>
                         ${run.duration}
                     </td>
                 </tr>
