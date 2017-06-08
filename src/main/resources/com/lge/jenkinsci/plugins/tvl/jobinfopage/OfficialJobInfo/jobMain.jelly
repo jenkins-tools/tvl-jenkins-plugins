@@ -8,13 +8,13 @@
     <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-datepicker.min.js"></script>
     <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-soy.min.js"></script>
     <script type="text/javascript">
-        function show_comment(url){
+        function show_comment(url) {
             window.open(url);
         }
     </script>
     <style type="text/css">
         td.build_number, td.gerrit_project {
-            font-weight: bold;
+        font-weight: bold;
         }
         .gitweb-link{
         background: #ccc;
@@ -33,16 +33,14 @@
         <!--text-transform: uppercase;-->
 
         background-color: #90EE90;
-        border-color: 	#90EE90;
+        border-color: #90EE90;
         color: #000000;
         }
     </style>
     <h2>Build List</h2>
     <table class="aui aui-table-sortable" style="width: 100%;">
-        <!--<table>-->
         <thead>
             <tr>
-                <!--<th id="name">Name</th>-->
                 <th id="number">Number</th>
                 <th id="result">Result</th>
                 <th id="when">When</th>
@@ -51,7 +49,7 @@
                 <th id="gitwhen">When Merged</th>
                 <th id="gitcomment">Comment</th>
                 <th id="gitcommitid">Commit id</th>
-                <th id="gitid">Id</th>
+                <th id="duration">Duration</th>
             </tr>
         </thead>
         <tbody>
@@ -63,7 +61,7 @@
                     <j:if test="${run.result == 'SUCCESS'}">
                         <td style="width: 50px;">
                             <a href="${run.download_url}" target="_blank">
-                            <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
+                                <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
                             </a>
                         </td>
                     </j:if>
@@ -72,36 +70,46 @@
                             <span class="aui-lozenge aui-lozenge-error">${run.result}</span>
                         </td>
                     </j:if>
-                    <td >
+                    <td>
                         ${run.when}
                     </td>
                     <td>
                         <pre>
-                        ${run.version}
+                            ${run.version}
                         </pre>
                     </td>
                     <td>
-                        <a target="_blank" href="${run.gittaglink}">
-                            <span class="aui-lozenge aui-lozenge-current">
-                            ${run.buildrepo}
-                            </span>
-                        </a>
+                        <j:if test="${run.buildrepo.trim() != '' and run.buildrepo != null}">
+                            <a target="_blank" href="${run.gittaglink}">
+                                <span class="aui-lozenge aui-lozenge-current">
+                                    ${run.buildrepo}
+                                </span>
+                            </a>
+                        </j:if>
                     </td>
                     <td>
-                        ${run.gitwhen}
+                        <pre>
+                            ${run.gitwhen}
+                        </pre>
                     </td>
                     <td>
-                        <button class="aui-button" onclick="show_comment('${run.gitcommenturl}')">Show Commit Message</button>
+                        <button class="aui-button" onclick="show_comment('${run.gitcommenturl}')">Show Commit Message
+                        </button>
                     </td>
                     <td>
-                        <a target="_blank" href="${run.gitcommitlink}">
-                            <span class="gitweb-link">
-                        ${run.gitcommitid}
-                            </span>
-                        </a>
+                        <j:if test="${run.gitcommitid != '' and run.gitcommitid != null}">
+                            <a target="_blank" href="${run.gitcommitlink}">
+                                <span class="gitweb-link">
+                                    ${run.gitcommitid.substring(0,7)}
+                                </span>
+                            </a>
+                        </j:if>
+                    </td>
+                    <td>
+                        ${run.duration}
                     </td>
                 </tr>
-           </j:forEach>
+            </j:forEach>
         </tbody>
     </table>
 </j:jelly>

@@ -7,6 +7,7 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by sunjoo on 07/06/2017.
@@ -91,5 +92,21 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
         }else {
             return Collections.emptyList();
         }
+    }
+
+    public static String convertDuration(long duration){
+        String durationStr = "";
+        long hours = TimeUnit.MILLISECONDS.toHours(duration);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(duration);
+        if (hours == 0){
+            durationStr = String.format("%d min, %d sec", minutes, seconds - TimeUnit.MINUTES.toSeconds(minutes));
+        }else {
+            durationStr = String.format("%d hour, %d min, %d sec",
+                    hours,
+                    minutes - TimeUnit.HOURS.toMinutes(hours),
+                    seconds - TimeUnit.MINUTES.toSeconds(minutes));
+        }
+        return durationStr;
     }
 }

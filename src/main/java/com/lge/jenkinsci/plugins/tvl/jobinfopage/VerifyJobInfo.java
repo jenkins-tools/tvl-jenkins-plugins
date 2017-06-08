@@ -4,7 +4,6 @@ import hudson.model.*;
 import hudson.util.RunList;
 import jenkins.model.Jenkins;
 
-import java.lang.reflect.Parameter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -37,8 +36,8 @@ public class VerifyJobInfo extends InvisibleAction {
         return logged_user_name;
     }
 
-    private String handlePathValue(String path){
-        if (path.charAt(path.length() -1) != '/'){
+    private String handlePathValue(String path) {
+        if (path.charAt(path.length() - 1) != '/') {
             path = path + "/";
         }
         return path;
@@ -73,35 +72,47 @@ public class VerifyJobInfo extends InvisibleAction {
         List<Map<String, String>> list = new ArrayList<>();
         String dateFormat = "yyyy-MM-dd hh:mm a";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-        LocalDateTime limitDay = LocalDateTime.now().minusDays(7);
+        LocalDateTime limitDay = LocalDateTime.now().minusDays(14);
         while (i.hasNext()) {
             Run each_run = (Run) i.next();
             List<Action> actions = (List<Action>) each_run.getAllActions();
-            ParametersAction parameterAction = (ParametersAction) actions.get(0);
             Map<String, String> each_r = new HashMap<String, String>();
-            String result = each_run.getResult().toString();
+            String result = "";
+            String description = "";
+            long duration = 0L;
             each_r.put("name", name);
-            each_r.put("result", result);
             int number = each_run.getNumber();
             each_r.put("number", String.valueOf(number));
-            String description = each_run.getDescription();
-            each_r.put("description", description);
             long startTime = each_run.getStartTimeInMillis();
             if (startTime < limitDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
                 continue;
             }
             Date startDate = new Date(startTime);
             each_r.put("when", simpleDateFormat.format(startDate.getTime()));
-            long duration = each_run.getDuration();
-            each_r.put("duration", String.valueOf(duration));
-            long estimataedDuration = each_run.getEstimatedDuration();
-            each_r.put("gerrit_project", parameterAction.getParameter("GERRIT_PROJECT").getValue().toString());
-            each_r.put("gerrit_change_url", parameterAction.getParameter("GERRIT_CHANGE_URL").getValue().toString());
-            each_r.put("gerrit_change_owner_name", parameterAction.getParameter("GERRIT_CHANGE_OWNER_NAME").getValue().toString());
-            each_r.put("gerrit_change_number", parameterAction.getParameter("GERRIT_CHANGE_NUMBER").getValue().toString());
-            each_r.put("gerrit_patchset_number", parameterAction.getParameter("GERRIT_PATCHSET_NUMBER").getValue().toString());
+            try {
+                result = each_run.getResult().toString();
+            } catch (Exception e) {
+                result = "In-Progress";
+            }
+
+            each_r.put("result", result);
+            try {
+                description = each_run.getDescription();
+                duration = each_run.getDuration();
+                ParametersAction parameterAction = (ParametersAction) actions.get(0);
+                each_r.put("gerrit_project", parameterAction.getParameter("GERRIT_PROJECT").getValue().toString());
+                each_r.put("gerrit_change_url", parameterAction.getParameter("GERRIT_CHANGE_URL").getValue().toString());
+                each_r.put("gerrit_change_owner_name", parameterAction.getParameter("GERRIT_CHANGE_OWNER_NAME").getValue().toString());
+                each_r.put("gerrit_change_number", parameterAction.getParameter("GERRIT_CHANGE_NUMBER").getValue().toString());
+                each_r.put("gerrit_patchset_number", parameterAction.getParameter("GERRIT_PATCHSET_NUMBER").getValue().toString());
+                each_r.put("download_url", archiveRootUrl + name + "/" + String.valueOf(number));
+            } catch (Exception e) {
+                description = "";
+                duration = each_run.getEstimatedDuration();
+            }
+            each_r.put("description", description);
+            each_r.put("duration", JobInfoFactory.convertDuration(duration));
             each_r.put("url", rootUrl + each_run.getUrl());
-            each_r.put("download_url", archiveRootUrl + name + "/" + String.valueOf(number));
             list.add(each_r);
         }
         return list;
