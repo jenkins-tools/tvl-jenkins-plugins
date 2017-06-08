@@ -80,6 +80,8 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
         String[] jobNameSplitted = jobName.split("-");
         if (jobNameSplitted[2].equals("verify")){
             return Collections.singletonList(new VerifyJobInfo(target));
+        }else if(jobNameSplitted[2].equals("official")){
+            return Collections.singletonList(new OfficialJobInfo(target));
         }else {
             return Collections.emptyList();
         }
