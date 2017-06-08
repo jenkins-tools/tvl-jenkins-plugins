@@ -1,0 +1,29 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:section title="Job Information Display">
+    <f:entry title="TVL Archive Root Url" field="tvlArchiveRootUrl" description="TVL Archive Root Url">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="TVL Archive Official Path" field="tvlArchiveOfficialPath" description="TVL Archive Official Build Job Path">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="TVL Archive Verify Path" field="tvlArchiveVerifyPath" description="TVL Archive Verify Build Job Path">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="SVL Archive Root Url" field="svlArchiveRootUrl" description="SVL Archive Root Url">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="SVL Archive Official Path" field="svlArchiveOfficialPath" description="SVL Archive Official Build Job Path">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="SVL Archive Verify Path" field="svlArchiveVerifyPath" description="SVL Archive Verify Build Job Path">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="TVL Jenkins Url" field="tvlJenkinsUrl" description="TVL Jenkins Url">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="SVL Jenkins Url" field="svlJenkinsUrl" description="SVL Jenkins Url">
+      <f:textbox />
+    </f:entry>
+  </f:section>
+</j:jelly>

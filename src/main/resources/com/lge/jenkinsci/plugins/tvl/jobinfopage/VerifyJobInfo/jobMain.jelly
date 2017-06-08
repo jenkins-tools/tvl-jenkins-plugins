@@ -1,0 +1,79 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+    <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui.min.css" media="all"/>
+    <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui-experimental.min.css" media="all"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui.min.js"></script>
+    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-experimental.min.js"></script>
+    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-datepicker.min.js"></script>
+    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-soy.min.js"></script>
+    <script type="text/javascript">
+        function show_my_change(username){
+            $('tr.change').each(function(){
+                var owner_name = $(this).find("td.owner").first().text();
+                console.log("Owner: " + owner_name);
+                console.log("Logged: " + username);
+                if (username === "all" || owner_name === username) {
+                    $(this).show();
+                }else{
+                    $(this).hide();
+                }
+            });
+        }
+    </script>
+    <style type="text/css">
+        td.build_number, td.gerrit_project {
+            font-weight: bold;
+        }
+    </style>
+    <h2>Build List</h2>
+    <button class="aui-button aui-button-primary" onclick="show_my_change('${it.loggedUser}')">Show my changes</button>
+    <button class="aui-button " onclick="show_my_change('all')">Show all</button>
+    <table class="aui aui-table-sortable" style="width: 100%;">
+        <!--<table>-->
+        <thead>
+            <tr>
+                <!--<th id="name">Name</th>-->
+                <th id="number">Number</th>
+                <th id="result">Result</th>
+                <th id="when">When</th>
+                <th id="repository">Repository</th>
+                <th id="gerrit_review">Gerrit Review</th>
+                <th id="owner">Owner</th>
+            </tr>
+        </thead>
+        <tbody>
+            <j:forEach var="run" items="${it.data}">
+                <tr class="change">
+                    <td style="width: 100px;" class="build_number">
+                        <a href="${run.url}" target="_blank">#${run.number}</a>
+                    </td>
+                    <j:if test="${run.result == 'SUCCESS'}">
+                        <td style="width: 50px;">
+                            <a href="${run.download_url}" target="_blank">
+                            <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
+                            </a>
+                        </td>
+                    </j:if>
+                    <j:if test="${run.result != 'SUCCESS'}">
+                        <td class="build-row-cell ">
+                            <span class="aui-lozenge aui-lozenge-error">${run.result}</span>
+                        </td>
+                    </j:if>
+                    <td >
+                        ${run.when}
+                    </td>
+                    <td class="gerrit_project">
+                        ${run.gerrit_project}
+                    </td>
+                    <td >
+                        <a href="${run.gerrit_change_url}" target="_blank">${run.gerrit_change_number}, ${run.gerrit_patchset_number}</a>
+                    </td>
+                    <td class="owner">
+                        ${run.gerrit_change_owner_name}
+                    </td>
+                </tr>
+           </j:forEach>
+        </tbody>
+    </table>
+</j:jelly>
