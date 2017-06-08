@@ -30,6 +30,7 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
         private String svlArchiveVerifyPath;
         private String tvlJenkinsUrl;
         private String svlJenkinsUrl;
+        private String wallGitwebUrl;
 
         public DescriptorForJobInfoFactory(){
             load();
@@ -45,6 +46,7 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
             svlArchiveVerifyPath= formData.getString("svlArchiveVerifyPath");
             tvlJenkinsUrl = formData.getString("tvlJenkinsUrl");
             svlJenkinsUrl = formData.getString("svlJenkinsUrl");
+            wallGitwebUrl = formData.getString("wallGitwebUrl");
             save();
             return super.configure(req, formData);
         }
@@ -66,6 +68,10 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
 
         public String getSvlJenkinsUrl(){
             return svlJenkinsUrl;
+        }
+
+        public String getWallGitwebUrl(){
+            return wallGitwebUrl;
         }
 
         @Override

@@ -1,5 +1,5 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form" xmlns:g2="null">
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui.min.css" media="all"/>
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui-experimental.min.css" media="all"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
@@ -20,6 +20,10 @@
                 }
             });
         }
+
+        function show_comment(url){
+            window.open(url);
+        }
     </script>
     <style type="text/css">
         td.build_number, td.gerrit_project {
@@ -37,6 +41,12 @@
                 <th id="number">Number</th>
                 <th id="result">Result</th>
                 <th id="when">When</th>
+                <th id="version">Version</th>
+                <th id="buildrepodescription">Build Repository Description</th>
+                <th id="gitwhen">When Merged</th>
+                <th id="gitcomment">Comment</th>
+                <th id="gitcommitid">Commit id</th>
+                <th id="gitid">Id</th>
             </tr>
         </thead>
         <tbody>
@@ -59,6 +69,27 @@
                     </j:if>
                     <td >
                         ${run.when}
+                    </td>
+                    <td>
+                        <pre>
+                        ${run.version}
+                        </pre>
+                    </td>
+                    <td>
+                        <a target="_blank" href="${run.gittaglink}">
+                            ${run.buildrepo}
+                        </a>
+                    </td>
+                    <td>
+                        ${run.gitwhen}
+                    </td>
+                    <td>
+                        <button class="aui-button" onclick="show_comment('${run.gitcommenturl}')">Show Commit Message</button>
+                    </td>
+                    <td>
+                        <a target="_blank" href="${run.gitcommitlink}">
+                        ${run.gitcommitid}
+                        </a>
                     </td>
                 </tr>
            </j:forEach>

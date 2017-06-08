@@ -25,5 +25,8 @@
     <f:entry title="SVL Jenkins Url" field="svlJenkinsUrl" description="SVL Jenkins Url">
       <f:textbox />
     </f:entry>
+    <f:entry title="Wall Gitweb Url" field="wallGitwebUrl" description="Wall Gitweb url">
+      <f:textbox />
+    </f:entry>
   </f:section>
 </j:jelly>
