@@ -4,7 +4,19 @@
     <f:entry title="TVL Archive Root Url" field="tvlArchiveRootUrl" description="TVL Archive Root Url">
       <f:textbox />
     </f:entry>
+    <f:entry title="TVL Archive Official Path" field="tvlArchiveOfficialPath" description="TVL Archive Official Build Job Path">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="TVL Archive Verify Path" field="tvlArchiveVerifyPath" description="TVL Archive Verify Build Job Path">
+      <f:textbox />
+    </f:entry>
     <f:entry title="SVL Archive Root Url" field="svlArchiveRootUrl" description="SVL Archive Root Url">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="SVL Archive Official Path" field="svlArchiveOfficialPath" description="SVL Archive Official Build Job Path">
+      <f:textbox />
+    </f:entry>
+    <f:entry title="SVL Archive Verify Path" field="svlArchiveVerifyPath" description="SVL Archive Verify Build Job Path">
       <f:textbox />
     </f:entry>
     <f:entry title="TVL Jenkins Url" field="tvlJenkinsUrl" description="TVL Jenkins Url">

@@ -23,7 +23,11 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
 
     public static class DescriptorForJobInfoFactory extends Descriptor<JobInfoFactory>{
         private String tvlArchiveRootUrl;
+        private String tvlArchiveOfficialPath;
+        private String tvlArchiveVerifyPath;
         private String svlArchiveRootUrl;
+        private String svlArchiveOfficialPath;
+        private String svlArchiveVerifyPath;
         private String tvlJenkinsUrl;
         private String svlJenkinsUrl;
 
@@ -34,7 +38,11 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException{
             tvlArchiveRootUrl = formData.getString("tvlArchiveRootUrl");
+            tvlArchiveOfficialPath = formData.getString("tvlArchiveOfficialPath");
+            tvlArchiveVerifyPath= formData.getString("tvlArchiveVerifyPath");
             svlArchiveRootUrl = formData.getString("svlArchiveRootUrl");
+            svlArchiveOfficialPath = formData.getString("svlArchiveOfficialPath");
+            svlArchiveVerifyPath= formData.getString("svlArchiveVerifyPath");
             tvlJenkinsUrl = formData.getString("tvlJenkinsUrl");
             svlJenkinsUrl = formData.getString("svlJenkinsUrl");
             save();
@@ -45,10 +53,13 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
             return tvlArchiveRootUrl;
         }
 
+        public String getTvlArchiveOfficialPath(){ return tvlArchiveOfficialPath;}
+        public String getTvlArchiveVerifyPath(){ return tvlArchiveVerifyPath;}
         public String getSvlArchiveRootUrl(){
             return svlArchiveRootUrl;
         }
-
+        public String getSvlArchiveOfficialPath(){ return svlArchiveOfficialPath;}
+        public String getSvlArchiveVerifyPath(){ return svlArchiveVerifyPath;}
         public String getTvlJenkinsUrl(){
             return tvlJenkinsUrl;
         }

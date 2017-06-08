@@ -17,7 +17,7 @@ public class VerifyJobInfo extends InvisibleAction {
 
     final private AbstractProject project;
 
-    public VerifyJobInfo(AbstractProject project){
+    public VerifyJobInfo(AbstractProject project) {
         this.project = project;
     }
 
@@ -26,30 +26,46 @@ public class VerifyJobInfo extends InvisibleAction {
         return "Job information page for " + project.toString();
     }
 
-    public String getLoggedUser(){
+    public String getLoggedUser() {
         String logged_user_name = "";
         try {
             User logged_user = User.current();
             logged_user_name = logged_user.getId();
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             logged_user_name = "None";
         }
         return logged_user_name;
     }
 
-    public List<Map<String, String>> getData(){
+    private String handlePathValue(String path){
+        if (path.charAt(path.length() -1) != '/'){
+            path = path + "/";
+        }
+        return path;
+    }
+
+    public List<Map<String, String>> getData() {
         String svlArchiveRootUrl = JobInfoFactory.DESCRIPTOR.getSvlArchiveRootUrl();
+        String svlArchiveVerifyPath = JobInfoFactory.DESCRIPTOR.getSvlArchiveVerifyPath();
         String tvlArchiveRootUrl = JobInfoFactory.DESCRIPTOR.getTvlArchiveRootUrl();
+        String tvlArchiveVerifyPath = JobInfoFactory.DESCRIPTOR.getTvlArchiveVerifyPath();
         String svlJenkinsUrl = JobInfoFactory.DESCRIPTOR.getSvlJenkinsUrl();
         String tvlJenkinsUrl = JobInfoFactory.DESCRIPTOR.getTvlJenkinsUrl();
         String archiveRootUrl = "";
         Jenkins instance = Jenkins.getInstance();
         String rootUrl = instance.getRootUrl();
-        if (rootUrl.equals(tvlJenkinsUrl)){
-            archiveRootUrl = tvlArchiveRootUrl + "starfish_verifications/";
-        }else  if(rootUrl.equals(svlJenkinsUrl)){
-            archiveRootUrl = svlArchiveRootUrl;
+        if (rootUrl.equals(tvlJenkinsUrl)) {
+            if (tvlArchiveVerifyPath == null || tvlArchiveVerifyPath.equals("")) {
+                archiveRootUrl = tvlArchiveRootUrl;
+            } else {
+                archiveRootUrl = tvlArchiveRootUrl + handlePathValue(tvlArchiveVerifyPath);
+            }
+        } else if (rootUrl.equals(svlJenkinsUrl)) {
+            if (svlArchiveVerifyPath == null || svlArchiveVerifyPath.equals("")) {
+                archiveRootUrl = svlArchiveRootUrl;
+            } else {
+                archiveRootUrl = svlArchiveRootUrl + handlePathValue(svlArchiveVerifyPath);
+            }
         }
         String name = project.getName();
         RunList r = project.getBuilds();
@@ -58,11 +74,11 @@ public class VerifyJobInfo extends InvisibleAction {
         String dateFormat = "yyyy-MM-dd hh:mm a";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         LocalDateTime limitDay = LocalDateTime.now().minusDays(7);
-        while(i.hasNext()){
+        while (i.hasNext()) {
             Run each_run = (Run) i.next();
             List<Action> actions = (List<Action>) each_run.getAllActions();
             ParametersAction parameterAction = (ParametersAction) actions.get(0);
-            Map<String,String> each_r = new HashMap<String, String>();
+            Map<String, String> each_r = new HashMap<String, String>();
             String result = each_run.getResult().toString();
             each_r.put("name", name);
             each_r.put("result", result);
@@ -71,7 +87,7 @@ public class VerifyJobInfo extends InvisibleAction {
             String description = each_run.getDescription();
             each_r.put("description", description);
             long startTime = each_run.getStartTimeInMillis();
-            if ( startTime < limitDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()){
+            if (startTime < limitDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
                 continue;
             }
             Date startDate = new Date(startTime);
