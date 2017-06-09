@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by sunjoo on 06/06/2017.
@@ -96,16 +97,47 @@ public class VerifyJobInfo extends InvisibleAction {
             }
 
             each_r.put("result", result);
+            String gerritProject = "";
+            String gerritChangeUrl = "";
+            String gerritChangeOwnerName = "";
+            String gerritChangeNumber = "";
+            String gerritPatchsetNumber = "";
+            String downloadUrl = "";
             try {
                 description = each_run.getDescription();
                 duration = each_run.getDuration();
-                ParametersAction parameterAction = (ParametersAction) actions.get(0);
-                each_r.put("gerrit_project", parameterAction.getParameter("GERRIT_PROJECT").getValue().toString());
-                each_r.put("gerrit_change_url", parameterAction.getParameter("GERRIT_CHANGE_URL").getValue().toString());
-                each_r.put("gerrit_change_owner_name", parameterAction.getParameter("GERRIT_CHANGE_OWNER_NAME").getValue().toString());
-                each_r.put("gerrit_change_number", parameterAction.getParameter("GERRIT_CHANGE_NUMBER").getValue().toString());
-                each_r.put("gerrit_patchset_number", parameterAction.getParameter("GERRIT_PATCHSET_NUMBER").getValue().toString());
-                each_r.put("download_url", archiveRootUrl + name + "/" + String.valueOf(number));
+
+                List<Object> parametersActions  = actions.stream().filter(action -> action instanceof ParametersAction).collect(Collectors.toList());
+                for (Object parametersAction : parametersActions) {
+                    List<ParameterValue> parameterValues = ((ParametersAction) parametersAction).getAllParameters();
+                    for (ParameterValue eachParameter : parameterValues){
+                        String parameterName = eachParameter.getName();
+                        String parameterValue = eachParameter.getValue().toString();
+                        if (parameterName.equals("GERRIT_PROJECT")){
+                            gerritProject = parameterValue;
+                        }
+                        else if (parameterName.equals("GERRIT_CHANGE_URL")){
+                            gerritChangeUrl = parameterValue;
+                        }
+                        else if (parameterName.equals("GERRIT_CHANGE_OWNER_NAME")){
+                            gerritChangeOwnerName = parameterValue;
+                        }
+                        else if (parameterName.equals("GERRIT_CHANGE_NUMBER")){
+                            gerritChangeNumber = parameterValue;
+                        }
+                        else if (parameterName.equals("GERRIT_PATCHSET_NUMBER")){
+                            gerritPatchsetNumber = parameterValue;
+                        }
+                    }
+
+                }
+                downloadUrl = archiveRootUrl + name + "/" + String.valueOf(number);
+                each_r.put("gerrit_project", gerritProject);
+                each_r.put("gerrit_change_url", gerritChangeUrl);
+                each_r.put("gerrit_change_owner_name", gerritChangeOwnerName);
+                each_r.put("gerrit_change_number", gerritChangeNumber);
+                each_r.put("gerrit_patchset_number", gerritPatchsetNumber);
+                each_r.put("download_url", downloadUrl);
             } catch (Exception e) {
                 description = "";
                 duration = each_run.getEstimatedDuration();

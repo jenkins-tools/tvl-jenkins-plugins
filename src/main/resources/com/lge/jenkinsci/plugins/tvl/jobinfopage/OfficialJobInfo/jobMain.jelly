@@ -13,18 +13,22 @@
         }
 
         function copy_value(evt) {
-            console.log(evt.target.previousSibling.select());
+            var inputBox = evt.target.parentNode.previousSibling.childNodes[0];
+            inputBox.select();
             var successful = document.execCommand('copy');
-            var copied_value = evt.target.previousSibling.getAttribute('full_value');
+            var copied_value = inputBox.getAttribute('full_value');
             if (copied_value === null) {
-                copied_value = evt.target.previousSibling.getAttribute('value');
+                copied_value = inputBox.getAttribute('value');
             }
             window.alert('Copied: ' + copied_value);
         }
 
         function go_to_link(evt) {
-            console.log("Selected: " + evt.target.previousSibling.previousSibling);
-            var go_link = evt.target.previousSibling.previousSibling.getAttribute('link');
+            // console.log("Selected: " + evt.target.previousSibling.previousSibling);
+            var inputBox = evt.target.parentNode.previousSibling.previousSibling.childNodes[0];
+            console.log(inputBox);
+            // var go_link = evt.target.previousSibling.previousSibling.getAttribute('link');
+            var go_link = inputBox.getAttribute('link');
             window.open(go_link);
         }
     </script>
@@ -106,12 +110,12 @@
                                     </td>
                                     <j:if test="${run.gittaglink != ''}">
                                         <td>
-                                            <button class="aui-button">
+                                            <button class="aui-button" onclick="copy_value(event)">
                                                 Copy
                                             </button>
                                         </td>
                                         <td>
-                                            <button class="aui-button">
+                                            <button class="aui-button" onclick="go_to_link(event)">
                                                 Go
                                             </button>
                                         </td>
