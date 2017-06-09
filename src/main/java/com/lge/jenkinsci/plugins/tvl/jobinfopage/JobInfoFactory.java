@@ -85,13 +85,14 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
     public Collection<? extends Action> createFor(AbstractProject target) {
         String jobName = target.getName();
         String[] jobNameSplitted = jobName.split("-");
-        if (jobNameSplitted[2].equals("verify")){
-            return Collections.singletonList(new VerifyJobInfo(target));
-        }else if(jobNameSplitted[2].equals("official")){
-            return Collections.singletonList(new OfficialJobInfo(target));
-        }else {
-            return Collections.emptyList();
+        if ( jobNameSplitted.length == 4){
+            if (jobNameSplitted[2].equals("verify")){
+                return Collections.singletonList(new VerifyJobInfo(target));
+            }else if(jobNameSplitted[2].equals("official")){
+                return Collections.singletonList(new OfficialJobInfo(target));
+            }
         }
+        return Collections.emptyList();
     }
 
     public static String convertDuration(long duration){
