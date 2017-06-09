@@ -44,8 +44,8 @@ public class OfficialJobInfo extends InvisibleAction {
         return logged_user_name;
     }
 
-    private String handlePathValue(String path){
-        if (path.charAt(path.length() -1) != '/'){
+    private String handlePathValue(String path) {
+        if (path.charAt(path.length() - 1) != '/') {
             path = path + "/";
         }
         return path;
@@ -97,7 +97,7 @@ public class OfficialJobInfo extends InvisibleAction {
             each_r.put("when", simpleDateFormat.format(startDate.getTime()));
             try {
                 result = each_run.getResult().toString();
-            }catch (Exception e){
+            } catch (Exception e) {
                 result = "In-Progress";
                 each_r.put("result", result);
                 list.add(each_r);
@@ -111,7 +111,7 @@ public class OfficialJobInfo extends InvisibleAction {
             each_r.put("url", rootUrl + each_run.getUrl());
             each_r.put("download_url", archiveRootUrl + name + "/" + String.valueOf(number));
 
-            if ( description != null) {
+            if (description != null) {
                 Document desc = Jsoup.parse(description);
                 Elements li_version = desc.select("li font");
                 Elements li_elements = desc.select("li");
@@ -139,8 +139,13 @@ public class OfficialJobInfo extends InvisibleAction {
                             .collect(Collectors.joining("\n"));
                 }
 
-                String gitCommitLink = wallGitwebUrl + "a=commit;h=" + gitCommitId;
-                String gitTagLink = wallGitwebUrl + "a=tag;h=refs/tags/" + buildRepoDescription;
+                String gitCommitLink = "";
+                String gitTagLink = "";
+                if (wallGitwebUrl != null) {
+                    gitCommitLink = wallGitwebUrl + "a=commit;h=" + gitCommitId;
+                    gitTagLink = wallGitwebUrl + "a=tag;h=refs/tags/" + buildRepoDescription;
+                }
+                each_r.put("gitcommitid", gitCommitId);
                 each_r.put("gitcommitid", gitCommitId);
                 each_r.put("gitid", gitId);
                 each_r.put("gitcommenturl", rootUrl + each_run.getUrl() + "changes#detail0");

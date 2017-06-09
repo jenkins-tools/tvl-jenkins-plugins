@@ -48,9 +48,13 @@
                         <a href="${run.url}" target="_blank">#${run.number}</a>
                     </td>
                     <j:if test="${run.result == 'SUCCESS'}">
-                        <td style="width: 50px;">
+                        <td>
+                            <!--<a href="${run.download_url}" target="_blank">
+                                <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
+                            </a>-->
                             <a href="${run.download_url}" target="_blank">
                                 <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
+                                <img src="${imagesURL}/24x24/folder.png"/>
                             </a>
                         </td>
                     </j:if>

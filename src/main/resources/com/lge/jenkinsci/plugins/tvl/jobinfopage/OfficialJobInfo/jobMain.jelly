@@ -1,5 +1,5 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form" xmlns:g2="null">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui.min.css" media="all"/>
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui-experimental.min.css" media="all"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
@@ -10,6 +10,22 @@
     <script type="text/javascript">
         function show_comment(url) {
             window.open(url);
+        }
+
+        function copy_value(evt) {
+            console.log(evt.target.previousSibling.select());
+            var successful = document.execCommand('copy');
+            var copied_value = evt.target.previousSibling.getAttribute('full_value');
+            if (copied_value === null) {
+                copied_value = evt.target.previousSibling.getAttribute('value');
+            }
+            window.alert('Copied: ' + copied_value);
+        }
+
+        function go_to_link(evt) {
+            console.log("Selected: " + evt.target.previousSibling.previousSibling);
+            var go_link = evt.target.previousSibling.previousSibling.getAttribute('link');
+            window.open(go_link);
         }
     </script>
     <style type="text/css">
@@ -31,10 +47,10 @@
         text-align: center;
         text-decoration: none;
         <!--text-transform: uppercase;-->
-
         background-color: #90EE90;
         border-color: #90EE90;
         color: #000000;
+        width: 100px;
         }
     </style>
     <h2>Build List</h2>
@@ -46,7 +62,7 @@
                 <th id="when">When</th>
                 <th id="version">Version</th>
                 <th id="buildrepodescription">Build Repository Description</th>
-                <th id="gitwhen">When Merged</th>
+                <!--<th id="gitwhen">When Merged</th>-->
                 <th id="gitcomment">Comment</th>
                 <th id="gitcommitid">Commit id</th>
                 <th id="duration">Duration</th>
@@ -59,9 +75,10 @@
                         <a href="${run.url}" target="_blank">#${run.number}</a>
                     </td>
                     <j:if test="${run.result == 'SUCCESS'}">
-                        <td style="width: 50px;">
+                        <td>
                             <a href="${run.download_url}" target="_blank">
                                 <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
+                                <img src="${imagesURL}/24x24/folder.png"/>
                             </a>
                         </td>
                     </j:if>
@@ -80,29 +97,62 @@
                     </td>
                     <td>
                         <j:if test="${run.buildrepo.trim() != '' and run.buildrepo != null}">
-                            <a target="_blank" href="${run.gittaglink}">
-                                <span class="aui-lozenge aui-lozenge-current">
-                                    ${run.buildrepo}
-                                </span>
-                            </a>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input readonly="true" style="text-transform: lowercase; font-size: 14px"
+                                               class="aui-lozenge aui-lozenge-error" link="${run.gittaglink}"
+                                               value="${run.buildrepo}"/>
+                                    </td>
+                                    <j:if test="${run.gittaglink != ''}">
+                                        <td>
+                                            <button class="aui-button">
+                                                Copy
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button class="aui-button">
+                                                Go
+                                            </button>
+                                        </td>
+                                    </j:if>
+                                </tr>
+                            </table>
                         </j:if>
                     </td>
-                    <td>
+                    <!--<td>
                         <pre>
                             ${run.gitwhen}
                         </pre>
-                    </td>
+                    </td>-->
                     <td>
                         <button class="aui-button" onclick="show_comment('${run.gitcommenturl}')">Show Commit Message
                         </button>
                     </td>
                     <td>
                         <j:if test="${run.gitcommitid != '' and run.gitcommitid != null}">
-                            <a target="_blank" href="${run.gitcommitlink}">
-                                <span class="gitweb-link">
-                                    ${run.gitcommitid.substring(0,7)}
-                                </span>
-                            </a>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input readonly="true" class="gitweb-link"
+                                               link="${run.gitcommitlink}" value="${run.gitcommitid.substring(0,7)}"
+                                               full_value="${run.gitcommitid}"
+                                        />
+                                    </td>
+                                    <j:if test="${run.gitcommitlink != ''}">
+                                        <td>
+                                            <button class="aui-button" onclick="copy_value(event)">
+                                                Copy
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button class="aui-button" onclick="go_to_link(event)">
+                                                Go
+                                            </button>
+                                        </td>
+                                    </j:if>
+                                </tr>
+                            </table>
                         </j:if>
                     </td>
                     <td>
