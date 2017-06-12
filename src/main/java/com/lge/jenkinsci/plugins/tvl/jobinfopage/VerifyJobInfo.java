@@ -85,8 +85,8 @@ public class VerifyJobInfo extends InvisibleAction {
             int number = each_run.getNumber();
             each_r.put("number", String.valueOf(number));
             long startTime = each_run.getStartTimeInMillis();
-            if (startTime < limitDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
-                continue;
+            if (startTime != 0 && startTime < limitDay.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
+                break;
             }
             Date startDate = new Date(startTime);
             each_r.put("when", simpleDateFormat.format(startDate.getTime()));
