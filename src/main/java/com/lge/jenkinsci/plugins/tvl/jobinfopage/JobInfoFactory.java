@@ -5,6 +5,7 @@ import hudson.model.*;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.StaplerRequest;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -85,8 +86,10 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
     public Collection<? extends Action> createFor(AbstractProject target) {
         String jobName = target.getName();
         String[] jobNameSplitted = jobName.split("-");
+        String[] jobTypes = {"verify", "integrate"};
         if ( jobNameSplitted.length == 4){
-            if (jobNameSplitted[2].equals("verify")){
+            String jobType = jobNameSplitted[2];
+            if (Arrays.asList(jobTypes).contains(jobType)){
                 return Collections.singletonList(new VerifyJobInfo(target));
             }else if(jobNameSplitted[2].equals("official")){
                 return Collections.singletonList(new OfficialJobInfo(target));
