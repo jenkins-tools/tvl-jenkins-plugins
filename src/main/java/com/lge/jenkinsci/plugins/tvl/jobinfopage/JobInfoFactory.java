@@ -95,7 +95,7 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
                 return Collections.singletonList(new OfficialJobInfo(target));
             }
         }
-        return Collections.emptyList();
+        return Collections.singletonList(new GeneralJobInfo(target));
     }
 
     public static String convertDuration(long duration){
