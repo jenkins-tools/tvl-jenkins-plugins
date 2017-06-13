@@ -60,7 +60,10 @@
                     </j:if>
                     <j:if test="${run.result != 'SUCCESS'}">
                         <td class="build-row-cell ">
-                            <span class="aui-lozenge aui-lozenge-error">${run.result}</span>
+                            <a href="${run.url}console" target="_blank">
+                                <span class="aui-lozenge aui-lozenge-error">${run.result}</span>
+                                <img src="${imagesURL}/24x24/terminal.png"/>
+                            </a>
                         </td>
                     </j:if>
                     <td>
