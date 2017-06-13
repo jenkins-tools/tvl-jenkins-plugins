@@ -60,6 +60,7 @@ public class OfficialJobInfo extends InvisibleAction {
         String tvlJenkinsUrl = JobInfoFactory.DESCRIPTOR.getTvlJenkinsUrl();
         String wallGitwebUrl = JobInfoFactory.DESCRIPTOR.getWallGitwebUrl();
         String archiveRootUrl = "";
+        String downloadUrl = "";
         Jenkins instance = Jenkins.getInstance();
         String rootUrl = instance.getRootUrl();
         if (rootUrl.equals(tvlJenkinsUrl)) {
@@ -109,7 +110,11 @@ public class OfficialJobInfo extends InvisibleAction {
             each_r.put("duration", JobInfoFactory.convertDuration(duration));
             long estimataedDuration = each_run.getEstimatedDuration();
             each_r.put("url", rootUrl + each_run.getUrl());
-            each_r.put("download_url", archiveRootUrl + name + "/" + String.valueOf(number));
+
+            if (archiveRootUrl != null && !archiveRootUrl.equals("")){
+                downloadUrl = archiveRootUrl + name + "/" + String.valueOf(number);
+            }
+            each_r.put("download_url", downloadUrl);
 
             if (description != null) {
                 Document desc = Jsoup.parse(description);

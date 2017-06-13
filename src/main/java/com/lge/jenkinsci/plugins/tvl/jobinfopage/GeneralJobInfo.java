@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 /**
  * Created by sunjoo on 06/06/2017.
  */
-public class VerifyJobInfo extends InvisibleAction {
+public class GeneralJobInfo extends InvisibleAction {
 
     final private AbstractProject project;
 
-    public VerifyJobInfo(AbstractProject project) {
+    public GeneralJobInfo(AbstractProject project) {
         this.project = project;
     }
 
@@ -45,6 +45,9 @@ public class VerifyJobInfo extends InvisibleAction {
     }
 
     public List<Map<String, String>> getData() {
+        Jenkins instance = Jenkins.getInstance();
+        String rootUrl = instance.getRootUrl();
+        /*
         String svlArchiveRootUrl = JobInfoFactory.DESCRIPTOR.getSvlArchiveRootUrl();
         String svlArchiveVerifyPath = JobInfoFactory.DESCRIPTOR.getSvlArchiveVerifyPath();
         String tvlArchiveRootUrl = JobInfoFactory.DESCRIPTOR.getTvlArchiveRootUrl();
@@ -52,8 +55,6 @@ public class VerifyJobInfo extends InvisibleAction {
         String svlJenkinsUrl = JobInfoFactory.DESCRIPTOR.getSvlJenkinsUrl();
         String tvlJenkinsUrl = JobInfoFactory.DESCRIPTOR.getTvlJenkinsUrl();
         String archiveRootUrl = "";
-        Jenkins instance = Jenkins.getInstance();
-        String rootUrl = instance.getRootUrl();
         if (rootUrl.equals(tvlJenkinsUrl)) {
             if (tvlArchiveVerifyPath == null || tvlArchiveVerifyPath.equals("")) {
                 archiveRootUrl = tvlArchiveRootUrl;
@@ -67,6 +68,7 @@ public class VerifyJobInfo extends InvisibleAction {
                 archiveRootUrl = svlArchiveRootUrl + handlePathValue(svlArchiveVerifyPath);
             }
         }
+        */
         String name = project.getName();
         RunList r = project.getBuilds();
         Iterator i = r.iterator();
@@ -97,16 +99,19 @@ public class VerifyJobInfo extends InvisibleAction {
             }
 
             each_r.put("result", result);
+            /*
             String gerritProject = "";
             String gerritChangeUrl = "";
             String gerritChangeOwnerName = "";
             String gerritChangeNumber = "";
             String gerritPatchsetNumber = "";
             String downloadUrl = "";
+            */
             try {
                 description = each_run.getDescription();
                 duration = each_run.getDuration();
 
+                /*
                 List<Object> parametersActions  = actions.stream().filter(action -> action instanceof ParametersAction).collect(Collectors.toList());
                 for (Object parametersAction : parametersActions) {
                     List<ParameterValue> parameterValues = ((ParametersAction) parametersAction).getAllParameters();
@@ -131,15 +136,14 @@ public class VerifyJobInfo extends InvisibleAction {
                     }
 
                 }
-                if ( archiveRootUrl != null && !archiveRootUrl.equals("")) {
-                    downloadUrl = archiveRootUrl + name + "/" + String.valueOf(number);
-                }
+                downloadUrl = archiveRootUrl + name + "/" + String.valueOf(number);
                 each_r.put("gerrit_project", gerritProject);
                 each_r.put("gerrit_change_url", gerritChangeUrl);
                 each_r.put("gerrit_change_owner_name", gerritChangeOwnerName);
                 each_r.put("gerrit_change_number", gerritChangeNumber);
                 each_r.put("gerrit_patchset_number", gerritPatchsetNumber);
                 each_r.put("download_url", downloadUrl);
+                */
             } catch (Exception e) {
                 description = "";
                 duration = each_run.getEstimatedDuration();

@@ -34,10 +34,9 @@
             <tr>
                 <th id="number">Number</th>
                 <th id="result">Result</th>
+                <th id="console">Console</th>
+                <th id="changes">Changes</th>
                 <th id="when">When</th>
-                <th id="repository">Repository</th>
-                <th id="gerrit_review">Gerrit Review</th>
-                <th id="owner">Owner</th>
                 <th id="duration">Duration</th>
             </tr>
         </thead>
@@ -49,40 +48,26 @@
                     </td>
                     <j:if test="${run.result == 'SUCCESS'}">
                         <td>
-                            <!--<a href="${run.download_url}" target="_blank">
-                                <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
-                            </a>-->
                             <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
-                            <j:if test="${run.download_url != '' and run.download_url != null}">
-                                <a href="${run.download_url}" target="_blank">
-                                    <img src="${imagesURL}/24x24/folder.png"/>
-                                </a>
-                            </j:if>
                         </td>
                     </j:if>
                     <j:if test="${run.result != 'SUCCESS'}">
                         <td class="build-row-cell ">
-                            <a href="${run.url}console" target="_blank">
-                                <span class="aui-lozenge aui-lozenge-error">${run.result}</span>
-                                <img src="${imagesURL}/24x24/terminal.png"/>
-                            </a>
+                            <span class="aui-lozenge aui-lozenge-error">${run.result}</span>
                         </td>
                     </j:if>
                     <td>
-                        ${run.when}
-                    </td>
-                    <td class="gerrit_project">
-                        ${run.gerrit_project}
+                        <a href="${run.url}console">
+                            <img src="${imagesURL}/24x24/terminal.png"/>
+                        </a>
                     </td>
                     <td>
-                        <j:if test="${run.gerrit_change_number != '' and run.gerrit_change_number != null}">
-                            <a href="${run.gerrit_change_url}" target="_blank">${run.gerrit_change_number},
-                                ${run.gerrit_patchset_number}
-                            </a>
-                        </j:if>
+                        <a href="${run.url}changes">
+                            <img src="${imagesURL}/24x24/notepad.png"/>
+                        </a>
                     </td>
-                    <td class="owner">
-                        ${run.gerrit_change_owner_name}
+                    <td>
+                        ${run.when}
                     </td>
                     <td class="duration">
                         ${run.duration}
