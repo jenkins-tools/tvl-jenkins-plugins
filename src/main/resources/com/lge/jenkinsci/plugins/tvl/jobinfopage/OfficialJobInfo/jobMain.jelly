@@ -80,10 +80,12 @@
                     </td>
                     <j:if test="${run.result == 'SUCCESS'}">
                         <td>
-                            <a href="${run.download_url}" target="_blank">
-                                <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
-                                <img src="${imagesURL}/24x24/folder.png"/>
-                            </a>
+                            <span class="aui-lozenge aui-lozenge-success">${run.result}</span>
+                            <j:if test="${run.download_url != '' and run.download_url != null}">
+                                <a href="${run.download_url}" target="_blank">
+                                    <img src="${imagesURL}/24x24/folder.png"/>
+                                </a>
+                            </j:if>
                         </td>
                     </j:if>
                     <j:if test="${run.result != 'SUCCESS'}">
@@ -141,7 +143,7 @@
                                         <input readonly="true" class="gitweb-link"
                                                link="${run.gitcommitlink}" value="${run.gitcommitid.substring(0,7)}"
                                                full_value="${run.gitcommitid}"
-                                        />
+                                                />
                                     </td>
                                     <j:if test="${run.gitcommitlink != ''}">
                                         <td>

@@ -131,7 +131,9 @@ public class VerifyJobInfo extends InvisibleAction {
                     }
 
                 }
-                downloadUrl = archiveRootUrl + name + "/" + String.valueOf(number);
+                if ( archiveRootUrl != null && !archiveRootUrl.equals("")) {
+                    downloadUrl = archiveRootUrl + name + "/" + String.valueOf(number);
+                }
                 each_r.put("gerrit_project", gerritProject);
                 each_r.put("gerrit_change_url", gerritChangeUrl);
                 each_r.put("gerrit_change_owner_name", gerritChangeOwnerName);
