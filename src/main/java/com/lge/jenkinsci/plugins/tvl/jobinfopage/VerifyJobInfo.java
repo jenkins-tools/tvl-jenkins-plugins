@@ -78,6 +78,27 @@ public class VerifyJobInfo extends InvisibleAction {
             Run each_run = (Run) i.next();
             List<Action> actions = (List<Action>) each_run.getAllActions();
             Map<String, String> each_r = new HashMap<String, String>();
+            List<String> causeUsers = new ArrayList<>();
+            if (name.startsWith("clean-engineering")) {
+                for (Action action : actions) {
+                    if (action instanceof CauseAction) {
+                        CauseAction causeAction = (CauseAction) action;
+                        List<Cause> causes = causeAction.getCauses();
+                        for (Cause cause : causes) {
+                            if (cause instanceof Cause.UpstreamCause) {
+                                List<Cause> upstreamCauses = ((Cause.UpstreamCause) cause).getUpstreamCauses();
+                                for (Cause upstreamCause : upstreamCauses) {
+                                    if (upstreamCause instanceof Cause.UserIdCause) {
+                                        causeUsers.add(((Cause.UserIdCause) upstreamCause).getUserId());
+                                    }
+                                }
+                            } else if (cause instanceof Cause.UserIdCause) {
+                                causeUsers.add(((Cause.UserIdCause) cause).getUserId());
+                            }
+                        }
+                    }
+                }
+            }
             String result = "";
             String description = "";
             long duration = 0L;
@@ -107,31 +128,27 @@ public class VerifyJobInfo extends InvisibleAction {
                 description = each_run.getDescription();
                 duration = each_run.getDuration();
 
-                List<Object> parametersActions  = actions.stream().filter(action -> action instanceof ParametersAction).collect(Collectors.toList());
+                List<Object> parametersActions = actions.stream().filter(action -> action instanceof ParametersAction).collect(Collectors.toList());
                 for (Object parametersAction : parametersActions) {
                     List<ParameterValue> parameterValues = ((ParametersAction) parametersAction).getAllParameters();
-                    for (ParameterValue eachParameter : parameterValues){
+                    for (ParameterValue eachParameter : parameterValues) {
                         String parameterName = eachParameter.getName();
                         String parameterValue = eachParameter.getValue().toString();
-                        if (parameterName.equals("GERRIT_PROJECT")){
+                        if (parameterName.equals("GERRIT_PROJECT")) {
                             gerritProject = parameterValue;
-                        }
-                        else if (parameterName.equals("GERRIT_CHANGE_URL")){
+                        } else if (parameterName.equals("GERRIT_CHANGE_URL")) {
                             gerritChangeUrl = parameterValue;
-                        }
-                        else if (parameterName.equals("GERRIT_CHANGE_OWNER_NAME")){
+                        } else if (parameterName.equals("GERRIT_CHANGE_OWNER_NAME")) {
                             gerritChangeOwnerName = parameterValue;
-                        }
-                        else if (parameterName.equals("GERRIT_CHANGE_NUMBER")){
+                        } else if (parameterName.equals("GERRIT_CHANGE_NUMBER")) {
                             gerritChangeNumber = parameterValue;
-                        }
-                        else if (parameterName.equals("GERRIT_PATCHSET_NUMBER")){
+                        } else if (parameterName.equals("GERRIT_PATCHSET_NUMBER")) {
                             gerritPatchsetNumber = parameterValue;
                         }
                     }
 
                 }
-                if ( archiveRootUrl != null && !archiveRootUrl.equals("")) {
+                if (archiveRootUrl != null && !archiveRootUrl.equals("")) {
                     downloadUrl = archiveRootUrl + name + "/" + String.valueOf(number);
                 }
                 each_r.put("gerrit_project", gerritProject);
@@ -147,6 +164,9 @@ public class VerifyJobInfo extends InvisibleAction {
             each_r.put("description", description);
             each_r.put("duration", JobInfoFactory.convertDuration(duration));
             each_r.put("url", rootUrl + each_run.getUrl());
+            if (causeUsers.size() != 0){
+                each_r.put("gerrit_change_owner_name", causeUsers.stream().collect(Collectors.joining(", ")));
+            }
             list.add(each_r);
         }
         return list;

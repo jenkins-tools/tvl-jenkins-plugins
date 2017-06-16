@@ -23,7 +23,7 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
     @Extension
     public static final DescriptorForJobInfoFactory DESCRIPTOR = new DescriptorForJobInfoFactory();
 
-    public static class DescriptorForJobInfoFactory extends Descriptor<JobInfoFactory>{
+    public static class DescriptorForJobInfoFactory extends Descriptor<JobInfoFactory> {
         private String tvlArchiveRootUrl;
         private String tvlArchiveOfficialPath;
         private String tvlArchiveVerifyPath;
@@ -34,18 +34,18 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
         private String svlJenkinsUrl;
         private String wallGitwebUrl;
 
-        public DescriptorForJobInfoFactory(){
+        public DescriptorForJobInfoFactory() {
             load();
         }
 
         @Override
-        public boolean configure(StaplerRequest req, JSONObject formData) throws FormException{
+        public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             tvlArchiveRootUrl = formData.getString("tvlArchiveRootUrl");
             tvlArchiveOfficialPath = formData.getString("tvlArchiveOfficialPath");
-            tvlArchiveVerifyPath= formData.getString("tvlArchiveVerifyPath");
+            tvlArchiveVerifyPath = formData.getString("tvlArchiveVerifyPath");
             svlArchiveRootUrl = formData.getString("svlArchiveRootUrl");
             svlArchiveOfficialPath = formData.getString("svlArchiveOfficialPath");
-            svlArchiveVerifyPath= formData.getString("svlArchiveVerifyPath");
+            svlArchiveVerifyPath = formData.getString("svlArchiveVerifyPath");
             tvlJenkinsUrl = formData.getString("tvlJenkinsUrl");
             svlJenkinsUrl = formData.getString("svlJenkinsUrl");
             wallGitwebUrl = formData.getString("wallGitwebUrl");
@@ -53,26 +53,39 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
             return super.configure(req, formData);
         }
 
-        public String getTvlArchiveRootUrl(){
+        public String getTvlArchiveRootUrl() {
             return tvlArchiveRootUrl;
         }
 
-        public String getTvlArchiveOfficialPath(){ return tvlArchiveOfficialPath;}
-        public String getTvlArchiveVerifyPath(){ return tvlArchiveVerifyPath;}
-        public String getSvlArchiveRootUrl(){
+        public String getTvlArchiveOfficialPath() {
+            return tvlArchiveOfficialPath;
+        }
+
+        public String getTvlArchiveVerifyPath() {
+            return tvlArchiveVerifyPath;
+        }
+
+        public String getSvlArchiveRootUrl() {
             return svlArchiveRootUrl;
         }
-        public String getSvlArchiveOfficialPath(){ return svlArchiveOfficialPath;}
-        public String getSvlArchiveVerifyPath(){ return svlArchiveVerifyPath;}
-        public String getTvlJenkinsUrl(){
+
+        public String getSvlArchiveOfficialPath() {
+            return svlArchiveOfficialPath;
+        }
+
+        public String getSvlArchiveVerifyPath() {
+            return svlArchiveVerifyPath;
+        }
+
+        public String getTvlJenkinsUrl() {
             return tvlJenkinsUrl;
         }
 
-        public String getSvlJenkinsUrl(){
+        public String getSvlJenkinsUrl() {
             return svlJenkinsUrl;
         }
 
-        public String getWallGitwebUrl(){
+        public String getWallGitwebUrl() {
             return wallGitwebUrl;
         }
 
@@ -87,25 +100,28 @@ public class JobInfoFactory extends TransientProjectActionFactory implements Des
         String jobName = target.getName();
         String[] jobNameSplitted = jobName.split("-");
         String[] jobTypes = {"verify", "integrate"};
-        if ( jobNameSplitted.length == 4){
+        if (jobNameSplitted.length == 4) {
             String jobType = jobNameSplitted[2];
-            if (Arrays.asList(jobTypes).contains(jobType)){
+            if (Arrays.asList(jobTypes).contains(jobType)) {
                 return Collections.singletonList(new VerifyJobInfo(target));
-            }else if(jobNameSplitted[2].equals("official")){
+            } else if (jobNameSplitted[2].equals("official")) {
                 return Collections.singletonList(new OfficialJobInfo(target));
             }
+        }
+        if (jobNameSplitted.length > 2 && jobNameSplitted[0].equals("clean")) {
+            return Collections.singletonList(new VerifyJobInfo(target));
         }
         return Collections.singletonList(new GeneralJobInfo(target));
     }
 
-    public static String convertDuration(long duration){
+    public static String convertDuration(long duration) {
         String durationStr = "";
         long hours = TimeUnit.MILLISECONDS.toHours(duration);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(duration);
-        if (hours == 0){
+        if (hours == 0) {
             durationStr = String.format("%d min, %d sec", minutes, seconds - TimeUnit.MINUTES.toSeconds(minutes));
-        }else {
+        } else {
             durationStr = String.format("%d hour, %d min, %d sec",
                     hours,
                     minutes - TimeUnit.HOURS.toMinutes(hours),

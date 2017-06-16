@@ -11,9 +11,10 @@
         function show_my_change(username) {
             $('tr.change').each(function () {
                 var owner_name = $(this).find("td.owner").first().text();
+                var names = owner_name.split(", ");
                 console.log("Owner: " + owner_name);
                 console.log("Logged: " + username);
-                if (username === "all" || owner_name === username) {
+                if (username === "all" || names.indexOf(username) !== -1) {
                     $(this).show();
                 } else {
                     $(this).hide();
