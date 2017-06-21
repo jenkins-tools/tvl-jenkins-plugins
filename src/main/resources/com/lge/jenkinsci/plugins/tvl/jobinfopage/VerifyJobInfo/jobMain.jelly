@@ -2,24 +2,21 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui.min.css" media="all"/>
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui-experimental.min.css" media="all"/>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-experimental.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-datepicker.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-soy.min.js"></script>
     <script type="text/javascript">
         function show_my_change(username) {
-            $('tr.change').each(function () {
-                var owner_name = $(this).find("td.owner").first().text();
-                var names = owner_name.split(", ");
-                console.log("Owner: " + owner_name);
-                console.log("Logged: " + username);
-                if (username === "all" || names.indexOf(username) !== -1) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
+            var changes = document.getElementsByClassName('change');
+            Array.prototype.forEach.call(changes, function (item) {
+                if (item.nodeName.toLowerCase() === "tr") {
+                    var change_owner = item.getElementsByClassName('owner')[0].innerHTML;
+                    console.log("Logger: " + username);
+                    console.log("Owner: " + change_owner);
+                    if (username === "all" || username === change_owner) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
                 }
-            });
+            })
         }
     </script>
     <style type="text/css">

@@ -2,11 +2,6 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui.min.css" media="all"/>
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui-experimental.min.css" media="all"/>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-experimental.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-datepicker.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-soy.min.js"></script>
     <script type="text/javascript">
         function show_comment(url) {
             window.open(url);

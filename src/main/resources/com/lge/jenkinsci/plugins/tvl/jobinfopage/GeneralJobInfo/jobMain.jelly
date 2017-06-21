@@ -2,25 +2,6 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui.min.css" media="all"/>
     <link rel="stylesheet" href="http://aui-cdn.atlassian.com/aui-adg/6.0.6/css/aui-experimental.min.css" media="all"/>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-experimental.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-datepicker.min.js"></script>
-    <script src="http://aui-cdn.atlassian.com/aui-adg/6.0.6/js/aui-soy.min.js"></script>
-    <script type="text/javascript">
-        function show_my_change(username) {
-            $('tr.change').each(function () {
-                var owner_name = $(this).find("td.owner").first().text();
-                console.log("Owner: " + owner_name);
-                console.log("Logged: " + username);
-                if (username === "all" || owner_name === username) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        }
-    </script>
     <style type="text/css">
         td.build_number, td.gerrit_project {
         font-weight: bold;
